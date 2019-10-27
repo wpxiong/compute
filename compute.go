@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	if result, err := computeStr("1233+3*(4*(6-(2*(3-2))))+(9-3*(6-7)*(2-5))*(4-2)"); err != nil {
+	if result, err := computeStr("(-2)*5"); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("result is :")
@@ -31,7 +31,11 @@ func compute(input string) (int, error) {
 			index += 1
 			isminus = true
 		} else if str == '+' || str == '-' || str == '*' || str == '/' {
-			if temInt, err := strconv.Atoi(temStr); err != nil {
+			if len(temStr) == 0 && str == '+' {
+				isminus = false
+			} else if len(temStr) == 0 && str == '-' {
+				isminus = true
+			} else if temInt, err := strconv.Atoi(temStr); err != nil {
 				return -1, errors.New("input string is not illegal")
 			} else {
 				if isOper {
