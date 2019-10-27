@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	if result, err := computeStr("1233+3*(4*(6-(2*(3-2))))+(9-3)*(4-2)"); err != nil {
+	if result, err := computeStr("1233+3*(4*(6-(2*(3-2))))+(9-3*(6-7)*(2-5))*(4-2)"); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("result is :")
@@ -25,8 +25,12 @@ func compute(input string) (int, error) {
 	var inputDataStack []int
 	var temStr string = ""
 	var isOper bool = false
+	var isminus bool = false
 	for index, str := range input {
-		if str == '+' || str == '-' || str == '*' || str == '/' {
+		if (str == '+' || str == '-' || str == '*' || str == '/') && index < len(input)-1 && input[index+1] == '-' {
+			index += 1
+			isminus = true
+		} else if str == '+' || str == '-' || str == '*' || str == '/' {
 			if temInt, err := strconv.Atoi(temStr); err != nil {
 				return -1, errors.New("input string is not illegal")
 			} else {
@@ -48,6 +52,10 @@ func compute(input string) (int, error) {
 		} else {
 			temStr = temStr + string(str)
 			if index == len(input)-1 {
+				if isminus {
+					temStr = "-" + temStr
+					isminus = false
+				}
 				if temInt, err := strconv.Atoi(temStr); err != nil {
 					return -1, errors.New("input string is not illegal")
 				} else {
